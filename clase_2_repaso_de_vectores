@@ -1,1 +1,127 @@
+#include <stdio.h>
+#include <stdlib.h>
+ /*
+ Repaso de Vectores  (Desarrollar una función por cada punto):
 
+Función que inserte un elemento en un vector
+    En vector ordenado
+    En vector desordenado
+        Al inicio
+        Al final
+        En posición pasada por argumento
+Función que elimine un elemento de un vector
+    Por valor
+        En vector ordenado
+        En vector desordenado
+    Por posición
+Función que busque un elemento de un vector (Debe retornar la posición, o -1 en el caso de que no exista)
+    En vector ordenado
+        Secuencial
+        Binaria / Dicotómica
+    En vector desordenado
+
+En cualquier caso:
+No puede perder elementos producto de una inserción (Debe desplazar elementos).
+No pueden quedar posiciones libres, o con cero, en el caso de una eliminación (Debe desplazar elementos).
+*/
+int ingresarElemento(){
+    int valor;
+    puts("Ingresar un elemento al vector: ");
+    scanf("%d", &valor);
+    return valor;
+}
+
+int ingresarPosicion(int z){
+    int pos;
+    do{
+        puts("Ingresar la posicion del elemento");
+        scanf("%d", &pos);
+        if(pos>z || pos<0){
+            printf("Error, ingrese una posicion entre 0 y %d\n", z);
+        }
+    }while(pos>z || pos<0);
+    return pos;
+}
+
+void copiarVector(int* v1, int* v2, int x){
+    int i;
+    for(i=0; i<x; i++){
+        *(v2+i) = *(v1+i);
+    }
+}
+
+void imprimeVector(int* x, int n){
+    int i = 0;
+    puts("IMPRIME VECTOR");
+    for(i=0; i<n; i++){
+        printf("Valor del vector[%d]: %d\n", i, *(x+i));
+    }
+}
+
+void ordenarVector(int* x, int n){
+    int i, j, aux;
+    puts("VECTOR ORDENADO");
+        for(i=0; i<n-1; i++){
+            for(j=i+1; j<n; j++){
+                if(*(x+i) > *(x+j)){
+                    aux = *(x+i);
+                    *(x+i) = *(x+j);
+                    *(x+j) = aux;
+                }
+            }
+        }
+}
+
+void ingresarElementoEnVectorOrdenado(int* p, int x){
+    int i, elemento, tam=x+1, v2[tam];
+    i = x-1;
+    ordenarVector(p, x);
+    copiarVector(p, &v2[0], tam);
+    imprimeVector(&v2[0], tam);
+    elemento = ingresarElemento();
+    while(elemento < *(p+i)){
+        v2[i+1] = *(p+i);
+        i = i-1;
+    }
+    v2[i]= elemento;
+    puts("*** INGRESA ELEMENTO EN VECTOR ORDENADO ***");
+    imprimeVector(&v2[0], tam);
+}
+
+void ingresarElementoEnVectorDesordenadoPrimeraPosicion(int* p, int x){
+    int tam=x+1, v2[tam];
+    copiarVector(p, &v2[1], tam);
+    v2[0] = ingresarElemento();
+    imprimeVector(&v2[0], tam);
+}
+
+void ingresarElementoEnVectorDesordenadoUltimaPosicion(int* p, int x){
+    int tam=x+1, v2[tam];
+    copiarVector(p, &v2[0], tam);
+    v2[x] = ingresarElemento();
+    imprimeVector(&v2[0], tam);
+}
+
+
+void ingresarElementoEnVectorDesordenadoPosicionPorParametro(int* p, int x){
+    int elemento, posicion, tam=x+1, v2[tam];
+    elemento = ingresarElemento();
+    posicion = ingresarPosicion(tam);
+    copiarVector(p, &v2[0], posicion-1);
+    v2[posicion]=elemento;
+    copiarVector(p, &v2[posicion+1], (tam-posicion));
+    imprimeVector(&v2[0], tam);
+
+}
+int main(){
+    int* p;
+    int vector1[] = {123, 654, 7851, 1478, 117};
+    int longitud = (sizeof(vector1)/sizeof(vector1[0]));
+    p = &vector1[0];
+    imprimeVector(p, longitud);
+    ingresarElementoEnVectorOrdenado(p, longitud);
+    //ingresarElementoEnVectorDesordenadoPrimeraPosicion(p, longitud);
+    //ingresarElementoEnVectorDesordenadoUltimaPosicion(p, longitud);
+    //ingresarElementoEnVectorDesordenadoPosicionPorParametro(p, longitud);
+    return 0;
+}
